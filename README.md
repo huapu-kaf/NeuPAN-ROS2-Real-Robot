@@ -169,6 +169,5 @@ ros2 launch neupan_ros neupan_with_pointlio.launch.py \
 
 ---
 
-<div align="center">
-    <font size="2">Maintained by the NeuPAN Team</font>
-</div>
+
+
