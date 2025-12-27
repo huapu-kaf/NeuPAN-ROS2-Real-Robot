@@ -1,0 +1,9 @@
+<launch>
+    <arg name="robot_namespace" default="/"/>
+    <param name="robot_description" command="$(find xacro)/xacro '$(find limo_description)/urdf/limo_four_diff.xacro'
+        robot_namespace:=$(arg robot_namespace)" />
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find neupan_ros)/example/gazebo_limo/rviz/limo_gazebo.rviz" />
+</launch>

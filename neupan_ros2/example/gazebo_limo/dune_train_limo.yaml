@@ -1,0 +1,26 @@
+device: 'cuda'
+
+robot:
+  kinematics: 'diff'
+  max_speed: [8, 1]
+  max_acce: [8, 3]
+  length: 0.322
+  width: 0.22
+
+train:
+  direct_train: true
+  data_size: 100000
+  data_range: [-25, -25, 25, 25]
+  batch_size: 256
+  epoch: 5000
+  valid_freq: 250
+  save_freq: 500
+  lr: 5e-5
+  lr_decay: 0.5
+  decay_freq: 1500
+  
+
+
+
+
+

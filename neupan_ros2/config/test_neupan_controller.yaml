@@ -1,0 +1,75 @@
+controller_server:
+  ros__parameters:
+    use_sim_time: false
+    odom_topic: odom
+    controller_frequency: 20.0
+    min_x_velocity_threshold: 0.001
+    min_y_velocity_threshold: 0.001  
+    min_theta_velocity_threshold: 0.001
+    failure_tolerance: 0.3
+    progress_checker_plugins: ["progress_checker"]
+    goal_checker_plugins: ["general_goal_checker"]
+    controller_plugins: ["FollowPath"]
+    
+    # Enable costmap 
+    local_costmap:
+      local_costmap:
+        ros__parameters:
+          use_sim_time: false
+          update_frequency: 5.0
+          publish_frequency: 2.0
+          global_frame: odom
+          robot_base_frame: base_link
+          rolling_window: true
+          width: 3
+          height: 3
+          resolution: 0.05
+          robot_radius: 0.2
+          plugins: ["obstacle_layer", "inflation_layer"]
+          obstacle_layer:
+            plugin: "nav2_costmap_2d::ObstacleLayer"
+            enabled: True
+            observation_sources: scan
+            scan:
+              topic: /scan
+              max_obstacle_height: 2.0
+              clearing: True
+              marking: True
+              data_type: "LaserScan"
+              raytrace_max_range: 3.0
+              raytrace_min_range: 0.0
+              obstacle_max_range: 2.5
+              obstacle_min_range: 0.0
+          inflation_layer:
+            plugin: "nav2_costmap_2d::InflationLayer"
+            cost_scaling_factor: 3.0
+            inflation_radius: 0.55
+          always_send_full_costmap: True
+    
+    progress_checker:
+      plugin: "nav2_controller::SimpleProgressChecker"
+      required_movement_radius: 0.5
+      movement_time_allowance: 10.0
+      
+    general_goal_checker:
+      stateful: True
+      plugin: "nav2_controller::SimpleGoalChecker"
+      xy_goal_tolerance: 0.25
+      yaw_goal_tolerance: 6.28
+      
+    # NeuPAN控制器配置
+    FollowPath:
+      plugin: "neupan_nav2_controller::NeuPANController"
+      
+      # 基本参数
+      robot_type: "diff"  # 差分驱动机器人
+      max_linear_velocity: 0.5   # 保守的最大线速度
+      max_angular_velocity: 1.0  # 保守的最大角速度
+      goal_tolerance: 0.25       # 目标到达容差
+      
+      # 传感器配置
+      laser_topic: "scan"        # 激光雷达话题
+      
+      # NeuPAN模型路径 (可选 - 如果未指定会使用默认路径)
+      dune_model_path: "/home/robotmaster/ros2_ws/src/neupan_ros/example/gazebo_limo/pretrain_limo/model_5000.pth"
+      neupan_config_path: "/home/robotmaster/ros2_ws/src/neupan_ros/example/gazebo_limo/config/neupan_planner_limo.yaml"
